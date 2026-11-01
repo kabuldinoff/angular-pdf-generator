@@ -66,7 +66,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
       link.download = filename;
       link.click();
     } finally {
-      URL.revokeObjectURL(url);
+setTimeout(() => URL.revokeObjectURL(url), 0);
     }
   }
 }
