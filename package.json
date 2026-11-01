@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun",
+    "lint": "eslint . --max-warnings=0"
   },
   "private": true,
   "dependencies": {
@@ -27,11 +28,18 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.15",
+    "@angular-eslint/builder": "^19.8.1",
+    "@angular-eslint/eslint-plugin": "^19.8.1",
+    "@angular-eslint/eslint-plugin-template": "^19.8.1",
+    "@angular-eslint/template-parser": "^19.8.1",
     "@angular/cli": "^19.2.15",
     "@angular/compiler-cli": "^19.2.0",
+    "@eslint/js": "^9.39.5",
     "@lhci/cli": "^0.15.1",
+    "@stylistic/eslint-plugin": "^3.1.0",
     "@types/jasmine": "~5.1.0",
     "@types/pdfmake": "^0.2.11",
+    "eslint": "^9.39.5",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -39,6 +47,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "serve": "^14.2.4",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.72.1"
   }
 }

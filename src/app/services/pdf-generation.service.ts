@@ -43,14 +43,14 @@ export class PdfGenerationService {
   async generate(data: DocumentFormValue): Promise<void> {
     try {
       const definition = this.createDocumentDefinition(data);
-const [pdfMakeModule, pdfFontsModule] = await Promise.all([
+      const [pdfMakeModule, pdfFontsModule] = await Promise.all([
         import('pdfmake/build/pdfmake'),
         import('pdfmake/build/vfs_fonts'),
       ]);
-const pdfMake = pdfMakeModule.default;
-const pdfFonts = pdfFontsModule.default ?? pdfFontsModule;
-pdfMake.vfs =
-  'vfs' in pdfFonts ? pdfFonts.vfs : pdfFonts;
+      const pdfMake = pdfMakeModule.default;
+      const pdfFonts = pdfFontsModule.default ?? pdfFontsModule;
+      pdfMake.vfs =
+        'vfs' in pdfFonts ? pdfFonts.vfs : pdfFonts;
       const blob = await new Promise<Blob>((resolve) => {
         pdfMake.createPdf(definition).getBlob(resolve);
       });
