@@ -47,7 +47,7 @@ export class PdfGenerationService {
         import('pdfmake/build/pdfmake'),
         import('pdfmake/build/vfs_fonts'),
       ]);
-      pdfMake.vfs = pdfFonts.vfs;
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const blob = await new Promise<Blob>((resolve) => {
         pdfMake.createPdf(definition).getBlob(resolve);
       });
