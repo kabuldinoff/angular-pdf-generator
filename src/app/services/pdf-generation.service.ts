@@ -43,11 +43,14 @@ export class PdfGenerationService {
   async generate(data: DocumentFormValue): Promise<void> {
     try {
       const definition = this.createDocumentDefinition(data);
-      const [{ default: pdfMake }, { default: pdfFonts }] = await Promise.all([
+const [pdfMakeModule, pdfFontsModule] = await Promise.all([
         import('pdfmake/build/pdfmake'),
         import('pdfmake/build/vfs_fonts'),
       ]);
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+const pdfMake = pdfMakeModule.default;
+const pdfFonts = pdfFontsModule.default ?? pdfFontsModule;
+pdfMake.vfs =
+  'vfs' in pdfFonts ? pdfFonts.vfs : pdfFonts;
       const blob = await new Promise<Blob>((resolve) => {
         pdfMake.createPdf(definition).getBlob(resolve);
       });
@@ -66,7 +69,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
       link.download = filename;
       link.click();
     } finally {
-setTimeout(() => URL.revokeObjectURL(url), 0);
+      setTimeout(() => URL.revokeObjectURL(url), 0);
     }
   }
 }

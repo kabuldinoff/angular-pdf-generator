@@ -14,17 +14,23 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Customer name</mat-label>
-        <input matInput formControlName="customerName" />
+        <input matInput maxlength="80" formControlName="customerName" />
         @if (form.controls.customerName.hasError('required')) {
           <mat-error>Customer name is required.</mat-error>
+        }
+        @if (form.controls.customerName.hasError('maxlength')) {
+          <mat-error>Customer name must be 80 characters or fewer.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Project title</mat-label>
-        <input matInput formControlName="projectTitle" />
+        <input matInput maxlength="120" formControlName="projectTitle" />
         @if (form.controls.projectTitle.hasError('required')) {
           <mat-error>Project title is required.</mat-error>
+        }
+        @if (form.controls.projectTitle.hasError('maxlength')) {
+          <mat-error>Project title must be 120 characters or fewer.</mat-error>
         }
       </mat-form-field>
 
@@ -41,9 +47,17 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
-        <textarea matInput rows="7" formControlName="description"></textarea>
+        <textarea
+          matInput
+          maxlength="1000"
+          rows="7"
+          formControlName="description"
+        ></textarea>
         @if (form.controls.description.hasError('required')) {
           <mat-error>Description is required.</mat-error>
+        }
+        @if (form.controls.description.hasError('maxlength')) {
+          <mat-error>Description must be 1000 characters or fewer.</mat-error>
         }
       </mat-form-field>
 
