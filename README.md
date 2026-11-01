@@ -63,8 +63,6 @@ npm run lighthouse
 
 ![Web Client Interface](docs/ui-screenshot.png)
 
-![Generated PDF Example](docs/pdf-screenshot.png)
-
 [View the generated PDF example](docs/showcase-invoice.pdf)
 
 ## GitHub Pages
