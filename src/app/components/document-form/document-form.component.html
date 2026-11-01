@@ -31,6 +31,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Contact email</mat-label>
         <input matInput type="email" formControlName="contactEmail" />
+        @if (form.controls.contactEmail.hasError('required')) {
+          <mat-error>Contact email is required.</mat-error>
+        }
         @if (form.controls.contactEmail.hasError('email')) {
           <mat-error>Enter a valid email address.</mat-error>
         }
