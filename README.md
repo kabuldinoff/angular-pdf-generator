@@ -65,6 +65,8 @@ npm run lighthouse
 
 ![Generated PDF Example](docs/pdf-screenshot.png)
 
+[View the generated PDF example](docs/showcase-invoice.pdf)
+
 ## GitHub Pages
 
 Pushes to `main` run the GitHub Actions workflow in
