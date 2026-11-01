@@ -43,6 +43,35 @@ Build the application for production with:
 ng build
 ```
 
+## Engineering Standards
+
+- Target Lighthouse scores above 90 for Performance, Accessibility, Best
+  Practices, and SEO.
+- Mobile-first responsive design stacks the form and preview vertically on
+  small screens.
+- Standalone Angular components, strict TypeScript, debounced preview updates,
+  and focused unit tests keep the core business logic maintainable.
+
+Run the Lighthouse quality gate locally after building:
+
+```bash
+npm run build
+npm run lighthouse
+```
+
+## Showcase
+
+![Web Client Interface](docs/ui-screenshot.png)
+
+[View the generated PDF example](docs/showcase-invoice.pdf)
+
+## GitHub Pages
+
+Pushes to `main` run the GitHub Actions workflow in
+`.github/workflows/deploy-pages.yml`. The workflow installs dependencies, runs
+the unit tests, builds the application with the repository base path, and
+publishes the static output to GitHub Pages.
+
 ## License
 
 This project is released under the MIT License.
