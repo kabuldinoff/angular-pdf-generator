@@ -75,7 +75,7 @@ export class DocumentFormComponent {
       .subscribe((value) => this.previewDocument.set(value));
   }
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.snackBar.open('Please complete the required fields.', 'Dismiss', {
@@ -85,7 +85,7 @@ export class DocumentFormComponent {
     }
 
     try {
-      this.pdfGenerationService.generate(this.form.getRawValue());
+      await this.pdfGenerationService.generate(this.form.getRawValue());
       this.snackBar.open('PDF downloaded successfully.', 'Dismiss', {
         duration: 4000,
       });

@@ -1,7 +1,9 @@
-<mat-card class="preview-card">
+<mat-card class="preview-card" aria-labelledby="preview-title">
   <mat-card-header>
     <mat-card-subtitle>Live preview</mat-card-subtitle>
-    <mat-card-title>{{ document().projectTitle || 'Business request' }}</mat-card-title>
+    <mat-card-title id="preview-title">
+      {{ document().projectTitle || 'Business request' }}
+    </mat-card-title>
   </mat-card-header>
   <mat-card-content class="document-page">
     <p class="eyebrow">BUSINESS REQUEST</p>

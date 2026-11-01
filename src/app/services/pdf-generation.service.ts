@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DocumentFormValue } from '../models/document.model';
-
-pdfMake.vfs = pdfFonts.vfs;
 
 @Injectable({ providedIn: 'root' })
 export class PdfGenerationService {
@@ -44,9 +40,14 @@ export class PdfGenerationService {
     }
   }
 
-  generate(data: DocumentFormValue): void {
+  async generate(data: DocumentFormValue): Promise<void> {
     try {
       const definition = this.createDocumentDefinition(data);
+      const [{ default: pdfMake }, { default: pdfFonts }] = await Promise.all([
+        import('pdfmake/build/pdfmake'),
+        import('pdfmake/build/vfs_fonts'),
+      ]);
+      pdfMake.vfs = pdfFonts.vfs;
       pdfMake.createPdf(definition).download('business-request.pdf');
     } catch (error) {
       throw new Error('Unable to generate the PDF.', { cause: error });
