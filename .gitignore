@@ -11,8 +11,17 @@
 npm-debug.log
 yarn-error.log
 
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+**/environment.local.ts
+**/environment.*.local.ts
+
 # IDEs and editors
 .idea/
+.cursor/
+.vscode/
 .project
 .classpath
 .c9/
@@ -20,12 +29,6 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 .history/*
 
 # Miscellaneous
