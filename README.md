@@ -43,6 +43,13 @@ Build the application for production with:
 ng build
 ```
 
+## GitHub Pages
+
+Pushes to `main` run the GitHub Actions workflow in
+`.github/workflows/deploy-pages.yml`. The workflow installs dependencies, runs
+the unit tests, builds the application with the repository base path, and
+publishes the static output to GitHub Pages.
+
 ## License
 
 This project is released under the MIT License.
