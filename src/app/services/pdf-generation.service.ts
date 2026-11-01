@@ -48,9 +48,25 @@ export class PdfGenerationService {
         import('pdfmake/build/vfs_fonts'),
       ]);
       pdfMake.vfs = pdfFonts.vfs;
-      pdfMake.createPdf(definition).download('business-request.pdf');
+      const blob = await new Promise<Blob>((resolve) => {
+        pdfMake.createPdf(definition).getBlob(resolve);
+      });
+      this.downloadBlob(blob, 'business-request.pdf');
     } catch (error) {
       throw new Error('Unable to generate the PDF.', { cause: error });
+    }
+  }
+
+  downloadBlob(blob: Blob, filename: string): void {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    try {
+      link.href = url;
+      link.download = filename;
+      link.click();
+    } finally {
+      URL.revokeObjectURL(url);
     }
   }
 }

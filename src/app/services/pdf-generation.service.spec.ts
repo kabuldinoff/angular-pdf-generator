@@ -33,4 +33,18 @@ describe('PdfGenerationService', () => {
       }),
     );
   });
+
+  it('should trigger a browser download for a generated Blob', () => {
+    const link = document.createElement('a');
+    const clickSpy = spyOn(link, 'click');
+    spyOn(document, 'createElement').and.returnValue(link);
+    spyOn(URL, 'createObjectURL').and.returnValue('blob:business-request');
+    const revokeSpy = spyOn(URL, 'revokeObjectURL');
+
+    service.downloadBlob(new Blob(['pdf']), 'business-request.pdf');
+
+    expect(link.download).toBe('business-request.pdf');
+    expect(clickSpy).toHaveBeenCalled();
+    expect(revokeSpy).toHaveBeenCalledWith('blob:business-request');
+  });
 });
