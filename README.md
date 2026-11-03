@@ -19,10 +19,10 @@ Open `http://localhost:4200/` in a browser.
 
 ## Architecture Overview
 
-The form component owns the typed reactive form and is the source of editable
-state. A valid submission is passed in one direction to a dedicated PDF
-generation service, which maps the model to a typed `pdfmake` document
-definition and triggers the browser download.
+Angular standalone components use typed Reactive Forms. Debounced form changes
+update a signal consumed by the live preview. Valid data is mapped by
+`PdfGenerationService` into a typed `pdfmake` definition, loaded lazily in the
+browser, and downloaded as a PDF Blob.
 
 The interface uses a split-screen layout with the Material form on the left
 and an HTML document preview on the right. Form `valueChanges` are normalized
@@ -70,10 +70,10 @@ npm run lighthouse
 
 ## GitHub Pages
 
-Pushes to `main` run the GitHub Actions workflow in
-`.github/workflows/deploy-pages.yml`. The workflow installs dependencies, runs
-the unit tests, builds the application with the repository base path, and
-publishes the static output to GitHub Pages.
+GitHub Actions runs lint, tests, builds the Angular app with the repository
+base path, and deploys the static output to GitHub Pages when changes are
+pushed to `main`. The workflow is defined in
+`.github/workflows/deploy-pages.yml`.
 
 ## License
 
