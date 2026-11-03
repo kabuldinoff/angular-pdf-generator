@@ -1,6 +1,9 @@
 .preview-card {
   height: 100%;
+  min-width: 0;
+  overflow: hidden;
   background: #e4e8ed;
+  overflow-wrap: anywhere;
 
   mat-card-subtitle {
     font-weight: 800;
@@ -11,9 +14,11 @@
   margin: 24px;
   padding: 32px;
   min-height: 420px;
+  min-width: 0;
   border: 1px solid #dfe5eb;
   background: #fff;
   box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+  overflow-wrap: anywhere;
 }
 
 .eyebrow {

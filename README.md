@@ -51,6 +51,9 @@ ng build
   small screens.
 - Standalone Angular components, strict TypeScript, debounced preview updates,
   and focused unit tests keep the core business logic maintainable.
+- AI-assisted development and pull-request review tools such as GitHub Copilot
+  and CodeRabbit may be used, with human review remaining responsible for the
+  final changes.
 
 Run the Lighthouse quality gate locally after building:
 
