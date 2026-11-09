@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import { DocumentFormValue } from '../models/document.model';
+import {
+  calculateInvoiceTotals,
+  DocumentFormValue,
+  formatDate,
+  formatCurrency,
+} from '../models/document.model';
 
 @Injectable({ providedIn: 'root' })
 export class PdfGenerationService {
@@ -8,21 +13,62 @@ export class PdfGenerationService {
     try {
       return {
         content: [
-          { text: 'Business Request', style: 'header' },
+          { text: 'Invoice', style: 'header' },
           { text: data.projectTitle, style: 'title' },
           {
             table: {
               widths: ['auto', '*'],
               body: [
-                ['Customer', data.customerName],
-                ['Contact email', data.contactEmail],
+                [
+                  'Issuer',
+                  `${data.issuerCompanyName}\n${data.issuerStreet}\n${data.issuerPostalCode} ${data.issuerCity}`,
+                ],
+                [
+                  'Customer',
+                  `${data.customerCompanyName}\n${data.customerStreet}\n${data.customerPostalCode} ${data.customerCity}`,
+                ],
+                ['Date', formatDate(data.date)],
+                [
+                  'Contact',
+                  `${data.customerName}\n${data.contactEmail}`,
+                ],
               ],
             },
             layout: 'lightHorizontalLines',
             margin: [0, 0, 0, 16],
           },
-          { text: 'Description', style: 'section' },
-          { text: data.description || 'No description provided.' },
+          { text: 'Items', style: 'section' },
+          {
+            table: {
+              widths: ['auto', '*', 'auto'],
+              body: [
+                ['Pos.', 'Item', 'Netto'],
+                ...data.items.map((item, index) => [
+                  String(index + 1),
+                  item.description || 'Item',
+                  formatCurrency(Number(item.price.replace(',', '.')) || 0),
+                ]),
+              ],
+            },
+            layout: 'lightHorizontalLines',
+          },
+          {
+            table: {
+              widths: ['*', 'auto'],
+              body: [
+                ['Net', formatCurrency(calculateInvoiceTotals(data.items).netto)],
+                ['19% VAT', formatCurrency(calculateInvoiceTotals(data.items).vat)],
+                [
+                  'Invoice Total (Gross)',
+                  formatCurrency(calculateInvoiceTotals(data.items).brutto),
+                ],
+              ],
+            },
+            layout: 'lightHorizontalLines',
+            margin: [0, 16, 0, 16],
+          },
+          { text: 'Notes', style: 'section' },
+          { text: data.description || 'No notes added.' },
         ],
         styles: {
           header: { fontSize: 10, color: '#52606d', bold: true },
@@ -54,7 +100,7 @@ export class PdfGenerationService {
       const blob = await new Promise<Blob>((resolve) => {
         pdfMake.createPdf(definition).getBlob(resolve);
       });
-      this.downloadBlob(blob, 'business-request.pdf');
+      this.downloadBlob(blob, 'invoice.pdf');
     } catch (error) {
       throw new Error('Unable to generate the PDF.', { cause: error });
     }

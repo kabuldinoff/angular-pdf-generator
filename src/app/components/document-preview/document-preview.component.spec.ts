@@ -19,8 +19,23 @@ describe('DocumentPreviewComponent', () => {
       projectTitle: 'project'.repeat(20),
       contactEmail: 'contact@example.com',
       description: 'description'.repeat(80),
+      issuerCompanyName: 'Issuer GmbH',
+      issuerStreet: 'Issuer Street 1',
+      issuerPostalCode: '10115',
+      issuerCity: 'Berlin',
+      customerCompanyName: 'Customer GmbH',
+      customerStreet: 'Customer Street 2',
+      customerPostalCode: '20095',
+      customerCity: 'Hamburg',
+      date: '2026-11-09',
+      items: [{ description: 'Item', price: '1200,32' }],
     });
     fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('customer'.repeat(20));
+    expect(fixture.nativeElement.textContent).toContain(
+      'contact@example.com',
+    );
 
     const card = fixture.nativeElement.querySelector(
       '.preview-card',

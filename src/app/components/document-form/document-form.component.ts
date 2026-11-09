@@ -8,6 +8,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormArray,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -19,6 +21,8 @@ import { debounceTime, map } from 'rxjs';
 import {
   DocumentFormControls,
   DocumentFormValue,
+  InvoiceItem,
+  InvoiceItemControls,
 } from '../../models/document.model';
 import { PdfGenerationService } from '../../services/pdf-generation.service';
 import { DocumentPreviewComponent } from '../document-preview/document-preview.component';
@@ -58,8 +62,22 @@ export class DocumentFormComponent {
       Validators.email,
     ]),
     description: this.formBuilder.nonNullable.control('', [
-      Validators.required,
       Validators.maxLength(1000),
+    ]),
+    issuerCompanyName: this.requiredTextControl(120),
+    issuerStreet: this.requiredTextControl(120),
+    issuerPostalCode: this.requiredTextControl(20),
+    issuerCity: this.requiredTextControl(80),
+    customerCompanyName: this.requiredTextControl(120),
+    customerStreet: this.requiredTextControl(120),
+    customerPostalCode: this.requiredTextControl(20),
+    customerCity: this.requiredTextControl(80),
+    date: this.formBuilder.nonNullable.control(
+      new Date().toISOString().slice(0, 10),
+      Validators.required,
+    ),
+    items: this.formBuilder.array<FormGroup<InvoiceItemControls>>([
+      this.createItem(),
     ]),
   });
 
@@ -73,6 +91,20 @@ export class DocumentFormComponent {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((value) => this.previewDocument.set(value));
+  }
+
+  get items(): FormArray<FormGroup<InvoiceItemControls>> {
+    return this.form.controls.items;
+  }
+
+  addItem(): void {
+    this.items.push(this.createItem());
+  }
+
+  removeItem(index: number): void {
+    if (this.items.length > 1) {
+      this.items.removeAt(index);
+    }
   }
 
   async downloadPdf(): Promise<void> {
@@ -97,13 +129,47 @@ export class DocumentFormComponent {
   }
 
   private toDocumentValue(
-    value: Partial<DocumentFormValue>,
+    value: Partial<Omit<DocumentFormValue, 'items'>> & {
+      items?: Array<Partial<InvoiceItem>>;
+    },
   ): DocumentFormValue {
     return {
       customerName: value.customerName ?? '',
       projectTitle: value.projectTitle ?? '',
       contactEmail: value.contactEmail ?? '',
       description: value.description ?? '',
+      issuerCompanyName: value.issuerCompanyName ?? '',
+      issuerStreet: value.issuerStreet ?? '',
+      issuerPostalCode: value.issuerPostalCode ?? '',
+      issuerCity: value.issuerCity ?? '',
+      customerCompanyName: value.customerCompanyName ?? '',
+      customerStreet: value.customerStreet ?? '',
+      customerPostalCode: value.customerPostalCode ?? '',
+      customerCity: value.customerCity ?? '',
+      date: value.date ?? '',
+      items: (value.items ?? []).map((item) => ({
+        description: item.description ?? '',
+        price: item.price ?? '',
+      })),
     };
+  }
+
+  private createItem(): FormGroup<InvoiceItemControls> {
+    return this.formBuilder.group<InvoiceItemControls>({
+      description: this.formBuilder.nonNullable.control('', [
+        Validators.required,
+        Validators.maxLength(200),
+      ]),
+      price: this.formBuilder.nonNullable.control('', [
+        Validators.pattern(/^\s*$|^\s*\d+(?:[.,]\d{1,2})?\s*$/),
+      ]),
+    });
+  }
+
+  private requiredTextControl(maxLength: number) {
+    return this.formBuilder.nonNullable.control('', [
+      Validators.required,
+      Validators.maxLength(maxLength),
+    ]);
   }
 }

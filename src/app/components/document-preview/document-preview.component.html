@@ -1,26 +1,72 @@
 <mat-card class="preview-card" aria-labelledby="preview-title">
   <mat-card-header>
-    <mat-card-subtitle>Live preview</mat-card-subtitle>
+    <mat-card-subtitle>Invoice preview</mat-card-subtitle>
     <mat-card-title id="preview-title">
-      {{ document().projectTitle || 'Business request' }}
+      {{ document().projectTitle || 'Invoice' }}
     </mat-card-title>
   </mat-card-header>
   <mat-card-content class="document-page">
-    <p class="eyebrow">BUSINESS REQUEST</p>
-    <h2>{{ document().projectTitle || 'Untitled project' }}</h2>
+    <p class="eyebrow">INVOICE</p>
+    <h2>{{ document().projectTitle || 'Untitled invoice' }}</h2>
 
     <dl>
       <div>
-        <dt>Customer</dt>
-        <dd>{{ document().customerName || 'Not provided' }}</dd>
+        <dt>Issuer</dt>
+        <dd>
+          {{ document().issuerCompanyName || 'Not provided' }}<br />
+          {{ document().issuerStreet }}<br />
+          {{ document().issuerPostalCode }} {{ document().issuerCity }}
+        </dd>
       </div>
       <div>
-        <dt>Contact email</dt>
-        <dd>{{ document().contactEmail || 'Not provided' }}</dd>
+        <dt>Customer</dt>
+        <dd>
+          {{ document().customerCompanyName || 'Not provided' }}<br />
+          {{ document().customerStreet }}<br />
+          {{ document().customerPostalCode }} {{ document().customerCity }}
+        </dd>
+      </div>
+      <div>
+        <dt>Date</dt>
+        <dd>{{ formattedDate || 'Not provided' }}</dd>
+      </div>
+      <div>
+        <dt>Contact</dt>
+        <dd>
+          {{ document().customerName || 'Not provided' }}<br />
+          {{ document().contactEmail || 'Not provided' }}
+        </dd>
       </div>
     </dl>
 
-    <h3>Description</h3>
-    <p class="description">{{ document().description || 'No description provided.' }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Pos.</th>
+          <th>Item</th>
+          <th>Net</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of document().items; track $index) {
+          <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ item.description || 'Item' }}</td>
+            <td>{{ item.price || '0,00' }} €</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div><span>Net</span><strong>{{ netto }}</strong></div>
+      <div><span>19% VAT</span><strong>{{ vat }}</strong></div>
+      <div>
+        <span>Invoice Total (Gross)</span><strong>{{ brutto }}</strong>
+      </div>
+    </div>
+
+    <h3>Notes</h3>
+    <p class="description">{{ document().description || 'No notes added.' }}</p>
   </mat-card-content>
 </mat-card>

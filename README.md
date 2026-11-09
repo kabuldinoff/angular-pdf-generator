@@ -1,7 +1,7 @@
-# Dynamic Form-to-PDF Web Client
+# Invoice Form-to-PDF Web Client
 
-A professional Angular web client that captures structured business input and
-generates a downloadable PDF directly in the browser.
+A professional Angular web client that captures invoice details and generates a
+downloadable PDF directly in the browser.
 
 The application uses Angular Standalone Components, strict TypeScript,
 Reactive Forms, Angular Material, and client-side PDF generation with
@@ -22,25 +22,48 @@ Open `http://localhost:4200/` in a browser.
 Angular standalone components use typed Reactive Forms. Debounced form changes
 update a signal consumed by the live preview. Valid data is mapped by
 `PdfGenerationService` into a typed `pdfmake` definition, loaded lazily in the
-browser, and downloaded as a PDF Blob.
+browser, and downloaded as a PDF Blob. Invoice items can be added dynamically;
+their prices are summed as Net, 19% VAT is calculated, and the gross total is
+shown as `Invoice Total (Gross)`.
 
 The interface uses a split-screen layout with the Material form on the left
 and an HTML document preview on the right. Form `valueChanges` are normalized
 into the preview model and debounced by 300 ms before the standalone preview
 component receives the latest state.
 
+## Invoice fields
+
+- Issuer and customer company names
+- Street, postal code, and city for both parties
+- Editable invoice date, defaulting to today
+- Contact name, email, invoice title, and notes
+- Any number of numbered invoice items
+
+Item prices accept decimal values with either a dot or comma separator. Empty
+prices are treated as `0`. Item prices are summed as Net, 19% VAT is added, and the final Gross value is
+labeled `Invoice Total (Gross)`. Amounts are displayed in EUR with cent
+precision. Invoice dates are displayed as `DD.MM.YYYY` in the preview and PDF,
+while notes remain optional.
+
 ## Development
 
 Run the unit tests with:
 
 ```bash
-ng test
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
 Build the application for production with:
 
 ```bash
-ng build
+npm run build
+```
+
+Run lint and the Lighthouse CI quality gate with:
+
+```bash
+npm run lint
+npm run lighthouse
 ```
 
 ## Engineering Standards
@@ -55,7 +78,8 @@ ng build
   and CodeRabbit may be used, with human review remaining responsible for the
   final changes.
 
-Run the Lighthouse quality gate locally after building:
+The Lighthouse gate requires a production build and checks Performance,
+Accessibility, Best Practices, and SEO at a minimum score of 90 each:
 
 ```bash
 npm run build
