@@ -51,6 +51,33 @@ h1 {
   margin: 0 0 12px;
 }
 
+.form-panel h3 {
+  margin: 16px 0 0;
+}
+
+.inline-fields {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
+}
+
+.items {
+  display: grid;
+  gap: 8px;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(110px, 0.6fr) auto;
+  gap: 8px;
+  align-items: start;
+}
+
+.position {
+  padding-top: 16px;
+  font-weight: 700;
+}
+
 button {
   align-self: flex-start;
   margin-top: 8px;
@@ -77,5 +104,17 @@ button {
 
   .workspace {
     grid-template-columns: 1fr;
+  }
+
+  .item-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .item-row mat-form-field:nth-child(3) {
+    grid-column: 2;
+  }
+
+  .item-row button {
+    grid-column: 2;
   }
 }

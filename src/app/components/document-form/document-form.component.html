@@ -1,36 +1,132 @@
 <main class="page-shell" id="main-content">
   <header class="page-header">
-    <p class="eyebrow">DOCUMENT WORKSPACE</p>
-    <h1>Turn structured input into a polished PDF</h1>
+    <p class="eyebrow">INVOICE WORKSPACE</p>
+    <h1>Create a polished invoice PDF</h1>
     <p class="intro">
-      Capture the essentials on the left and review the document before you download it.
+      Add invoice details and line items, then review the document before downloading it.
     </p>
   </header>
 
   <section class="workspace" aria-labelledby="workspace-title">
     <h2 class="visually-hidden" id="workspace-title">Document form and preview</h2>
     <form class="form-panel" [formGroup]="form" (ngSubmit)="downloadPdf()">
-      <h2>Document details</h2>
+      <h2>Invoice details</h2>
+
+      <h3>Issuer</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Company name</mat-label>
+        <input matInput formControlName="issuerCompanyName" />
+        @if (form.controls.issuerCompanyName.hasError('required')) {
+          <mat-error>Company name is required.</mat-error>
+        }
+        @if (form.controls.issuerCompanyName.hasError('maxlength')) {
+          <mat-error>Company name must be 120 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Street</mat-label>
+        <input matInput formControlName="issuerStreet" />
+        @if (form.controls.issuerStreet.hasError('required')) {
+          <mat-error>Street is required.</mat-error>
+        }
+        @if (form.controls.issuerStreet.hasError('maxlength')) {
+          <mat-error>Street must be 120 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+      <div class="inline-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Postal code</mat-label>
+          <input matInput formControlName="issuerPostalCode" />
+          @if (form.controls.issuerPostalCode.hasError('required')) {
+            <mat-error>Postal code is required.</mat-error>
+          }
+          @if (form.controls.issuerPostalCode.hasError('maxlength')) {
+            <mat-error>Postal code must be 20 characters or fewer.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="issuerCity" />
+          @if (form.controls.issuerCity.hasError('required')) {
+            <mat-error>City is required.</mat-error>
+          }
+          @if (form.controls.issuerCity.hasError('maxlength')) {
+            <mat-error>City must be 80 characters or fewer.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <h3>Customer</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Company name</mat-label>
+        <input matInput formControlName="customerCompanyName" />
+        @if (form.controls.customerCompanyName.hasError('required')) {
+          <mat-error>Company name is required.</mat-error>
+        }
+        @if (form.controls.customerCompanyName.hasError('maxlength')) {
+          <mat-error>Company name must be 120 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Street</mat-label>
+        <input matInput formControlName="customerStreet" />
+        @if (form.controls.customerStreet.hasError('required')) {
+          <mat-error>Street is required.</mat-error>
+        }
+        @if (form.controls.customerStreet.hasError('maxlength')) {
+          <mat-error>Street must be 120 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+      <div class="inline-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Postal code</mat-label>
+          <input matInput formControlName="customerPostalCode" />
+          @if (form.controls.customerPostalCode.hasError('required')) {
+            <mat-error>Postal code is required.</mat-error>
+          }
+          @if (form.controls.customerPostalCode.hasError('maxlength')) {
+            <mat-error>Postal code must be 20 characters or fewer.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="customerCity" />
+          @if (form.controls.customerCity.hasError('required')) {
+            <mat-error>City is required.</mat-error>
+          }
+          @if (form.controls.customerCity.hasError('maxlength')) {
+            <mat-error>City must be 80 characters or fewer.</mat-error>
+          }
+        </mat-form-field>
+      </div>
 
       <mat-form-field appearance="outline">
-        <mat-label>Customer name</mat-label>
-        <input matInput maxlength="80" formControlName="customerName" />
-        @if (form.controls.customerName.hasError('required')) {
-          <mat-error>Customer name is required.</mat-error>
-        }
-        @if (form.controls.customerName.hasError('maxlength')) {
-          <mat-error>Customer name must be 80 characters or fewer.</mat-error>
+        <mat-label>Invoice date</mat-label>
+        <input matInput type="date" formControlName="date" />
+        @if (form.controls.date.hasError('required')) {
+          <mat-error>Invoice date is required.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Project title</mat-label>
+        <mat-label>Contact name</mat-label>
+        <input matInput maxlength="80" formControlName="customerName" />
+        @if (form.controls.customerName.hasError('required')) {
+          <mat-error>Contact name is required.</mat-error>
+        }
+        @if (form.controls.customerName.hasError('maxlength')) {
+          <mat-error>Contact name must be 80 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Invoice title</mat-label>
         <input matInput maxlength="120" formControlName="projectTitle" />
         @if (form.controls.projectTitle.hasError('required')) {
-          <mat-error>Project title is required.</mat-error>
+          <mat-error>Invoice title is required.</mat-error>
         }
         @if (form.controls.projectTitle.hasError('maxlength')) {
-          <mat-error>Project title must be 120 characters or fewer.</mat-error>
+          <mat-error>Invoice title must be 120 characters or fewer.</mat-error>
         }
       </mat-form-field>
 
@@ -45,20 +141,54 @@
         }
       </mat-form-field>
 
+      <h3>Line items</h3>
+      <div formArrayName="items" class="items">
+        @for (item of items.controls; track item; let index = $index) {
+          <div class="item-row" [formGroupName]="index">
+            <span class="position">{{ index + 1 }}</span>
+            <mat-form-field appearance="outline">
+              <mat-label>Item description</mat-label>
+              <input matInput formControlName="description" />
+              @if (item.controls.description.hasError('required')) {
+                <mat-error>Item description is required.</mat-error>
+              }
+              @if (item.controls.description.hasError('maxlength')) {
+                <mat-error>
+                  Item description must be 200 characters or fewer.
+                </mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Net price (€)</mat-label>
+              <input matInput inputmode="decimal" formControlName="price" />
+              @if (item.controls.price.hasError('pattern')) {
+                <mat-error>Enter a valid amount, for example 1200.32.</mat-error>
+              }
+            </mat-form-field>
+            <button
+              mat-button
+              type="button"
+              [disabled]="items.length === 1"
+              (click)="removeItem(index)"
+              [attr.aria-label]="'Remove item ' + (index + 1)"
+            >
+              Remove
+            </button>
+          </div>
+        }
+      </div>
+      <button mat-stroked-button type="button" (click)="addItem()">
+        Add item
+      </button>
+
       <mat-form-field appearance="outline">
-        <mat-label>Description</mat-label>
+        <mat-label>Description / notes (optional)</mat-label>
         <textarea
           matInput
           maxlength="1000"
-          rows="7"
+          rows="5"
           formControlName="description"
         ></textarea>
-        @if (form.controls.description.hasError('required')) {
-          <mat-error>Description is required.</mat-error>
-        }
-        @if (form.controls.description.hasError('maxlength')) {
-          <mat-error>Description must be 1000 characters or fewer.</mat-error>
-        }
       </mat-form-field>
 
       <button

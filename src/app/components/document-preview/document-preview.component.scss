@@ -1,5 +1,7 @@
 .preview-card {
-  height: 100%;
+  position: sticky;
+  top: 24px;
+  align-self: start;
   min-width: 0;
   overflow: hidden;
   background: #e4e8ed;
@@ -7,6 +9,12 @@
 
   mat-card-subtitle {
     font-weight: 800;
+  }
+}
+
+@media (max-width: 800px) {
+  .preview-card {
+    position: static;
   }
 }
 
@@ -57,4 +65,40 @@ dd {
 
 .description {
   white-space: pre-wrap;
+}
+
+table {
+  width: 100%;
+  margin-top: 28px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px 4px;
+  border-bottom: 1px solid #dfe5eb;
+}
+
+th:last-child,
+td:last-child {
+  text-align: right;
+}
+
+.totals {
+  display: grid;
+  gap: 8px;
+  max-width: 280px;
+  margin: 20px 0 0 auto;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.totals div:last-child {
+  padding-top: 8px;
+  border-top: 2px solid #1f2933;
 }

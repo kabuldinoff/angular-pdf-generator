@@ -8,6 +8,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormArray,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -19,6 +21,8 @@ import { debounceTime, map } from 'rxjs';
 import {
   DocumentFormControls,
   DocumentFormValue,
+  InvoiceItem,
+  InvoiceItemControls,
 } from '../../models/document.model';
 import { PdfGenerationService } from '../../services/pdf-generation.service';
 import { DocumentPreviewComponent } from '../document-preview/document-preview.component';
@@ -58,8 +62,27 @@ export class DocumentFormComponent {
       Validators.email,
     ]),
     description: this.formBuilder.nonNullable.control('', [
-      Validators.required,
       Validators.maxLength(1000),
+    ]),
+    issuerCompanyName: this.requiredTextControl(120),
+    issuerStreet: this.requiredTextControl(120),
+    issuerPostalCode: this.requiredTextControl(20),
+    issuerCity: this.requiredTextControl(80),
+    customerCompanyName: this.requiredTextControl(120),
+    customerStreet: this.requiredTextControl(120),
+    customerPostalCode: this.requiredTextControl(20),
+    customerCity: this.requiredTextControl(80),
+    date: this.formBuilder.nonNullable.control(
+      (() => {
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${today.getFullYear()}-${month}-${day}`;
+      })(),
+      Validators.required,
+    ),
+    items: this.formBuilder.array<FormGroup<InvoiceItemControls>>([
+      this.createItem(),
     ]),
   });
 
@@ -75,6 +98,24 @@ export class DocumentFormComponent {
       .subscribe((value) => this.previewDocument.set(value));
   }
 
+  /** Returns the dynamic invoice item controls. */
+  get items(): FormArray<FormGroup<InvoiceItemControls>> {
+    return this.form.controls.items;
+  }
+
+  /** Adds an empty invoice item row. */
+  addItem(): void {
+    this.items.push(this.createItem());
+  }
+
+  /** Removes an invoice item unless it is the final remaining row. */
+  removeItem(index: number): void {
+    if (this.items.length > 1) {
+      this.items.removeAt(index);
+    }
+  }
+
+  /** Validates the form and starts the invoice PDF download. */
   async downloadPdf(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -96,14 +137,51 @@ export class DocumentFormComponent {
     }
   }
 
+  /** Normalizes partial reactive-form values for the preview model. */
   private toDocumentValue(
-    value: Partial<DocumentFormValue>,
+    value: Partial<Omit<DocumentFormValue, 'items'>> & {
+      items?: Array<Partial<InvoiceItem>>;
+    },
   ): DocumentFormValue {
     return {
       customerName: value.customerName ?? '',
       projectTitle: value.projectTitle ?? '',
       contactEmail: value.contactEmail ?? '',
       description: value.description ?? '',
+      issuerCompanyName: value.issuerCompanyName ?? '',
+      issuerStreet: value.issuerStreet ?? '',
+      issuerPostalCode: value.issuerPostalCode ?? '',
+      issuerCity: value.issuerCity ?? '',
+      customerCompanyName: value.customerCompanyName ?? '',
+      customerStreet: value.customerStreet ?? '',
+      customerPostalCode: value.customerPostalCode ?? '',
+      customerCity: value.customerCity ?? '',
+      date: value.date ?? '',
+      items: (value.items ?? []).map((item) => ({
+        description: item.description ?? '',
+        price: item.price ?? '',
+      })),
     };
+  }
+
+  /** Creates a typed invoice item form group. */
+  private createItem(): FormGroup<InvoiceItemControls> {
+    return this.formBuilder.group<InvoiceItemControls>({
+      description: this.formBuilder.nonNullable.control('', [
+        Validators.required,
+        Validators.maxLength(200),
+      ]),
+      price: this.formBuilder.nonNullable.control('', [
+        Validators.pattern(/^\s*$|^\s*\d+(?:[.,]\d{1,2})?\s*$/),
+      ]),
+    });
+  }
+
+  /** Creates a required text control with a maximum length. */
+  private requiredTextControl(maxLength: number) {
+    return this.formBuilder.nonNullable.control('', [
+      Validators.required,
+      Validators.maxLength(maxLength),
+    ]);
   }
 }
