@@ -74,6 +74,15 @@ describe('PdfGenerationService', () => {
     expect(formatDate('')).toBe('');
   });
 
+  it('should reject non-finite item prices for PDF output', () => {
+    expect(() =>
+      service.createDocumentDefinition({
+        ...documentValue,
+        items: [{ description: 'Invalid', price: 'not-a-number' }],
+      }),
+    ).toThrowError('Unable to map form data to a PDF document.');
+  });
+
   it('should trigger a browser download for a generated Blob', fakeAsync(() => {
     const link = document.createElement('a');
     const clickSpy = spyOn(link, 'click');

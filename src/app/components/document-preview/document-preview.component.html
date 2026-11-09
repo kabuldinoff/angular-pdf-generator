@@ -52,7 +52,9 @@
           <tr>
             <td>{{ $index + 1 }}</td>
             <td>{{ item.description || 'Item' }}</td>
-            <td>{{ item.price || '0,00' }} €</td>
+            <td>
+              {{ formatItemPrice(item.price || '') }}
+            </td>
           </tr>
         }
       </tbody>

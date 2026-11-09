@@ -73,7 +73,12 @@ export class DocumentFormComponent {
     customerPostalCode: this.requiredTextControl(20),
     customerCity: this.requiredTextControl(80),
     date: this.formBuilder.nonNullable.control(
-      new Date().toISOString().slice(0, 10),
+      (() => {
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${today.getFullYear()}-${month}-${day}`;
+      })(),
       Validators.required,
     ),
     items: this.formBuilder.array<FormGroup<InvoiceItemControls>>([
@@ -93,20 +98,24 @@ export class DocumentFormComponent {
       .subscribe((value) => this.previewDocument.set(value));
   }
 
+  /** Returns the dynamic invoice item controls. */
   get items(): FormArray<FormGroup<InvoiceItemControls>> {
     return this.form.controls.items;
   }
 
+  /** Adds an empty invoice item row. */
   addItem(): void {
     this.items.push(this.createItem());
   }
 
+  /** Removes an invoice item unless it is the final remaining row. */
   removeItem(index: number): void {
     if (this.items.length > 1) {
       this.items.removeAt(index);
     }
   }
 
+  /** Validates the form and starts the invoice PDF download. */
   async downloadPdf(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -128,6 +137,7 @@ export class DocumentFormComponent {
     }
   }
 
+  /** Normalizes partial reactive-form values for the preview model. */
   private toDocumentValue(
     value: Partial<Omit<DocumentFormValue, 'items'>> & {
       items?: Array<Partial<InvoiceItem>>;
@@ -154,6 +164,7 @@ export class DocumentFormComponent {
     };
   }
 
+  /** Creates a typed invoice item form group. */
   private createItem(): FormGroup<InvoiceItemControls> {
     return this.formBuilder.group<InvoiceItemControls>({
       description: this.formBuilder.nonNullable.control('', [
@@ -166,6 +177,7 @@ export class DocumentFormComponent {
     });
   }
 
+  /** Creates a required text control with a maximum length. */
   private requiredTextControl(maxLength: number) {
     return this.formBuilder.nonNullable.control('', [
       Validators.required,

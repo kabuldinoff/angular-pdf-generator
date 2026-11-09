@@ -49,12 +49,14 @@ export interface InvoiceTotals {
   brutto: number;
 }
 
+/** Converts a user-entered amount to a non-negative numeric value. */
 export function parseAmount(value: string): number {
   const normalized = value.trim().replace(',', '.');
   const amount = Number(normalized);
   return Number.isFinite(amount) && amount >= 0 ? amount : 0;
 }
 
+/** Calculates Net, VAT, and Gross totals for invoice items. */
 export function calculateInvoiceTotals(items: InvoiceItem[]): InvoiceTotals {
   const netto = items.reduce((sum, item) => sum + parseAmount(item.price), 0);
   const vat = netto * 0.19;
@@ -66,6 +68,7 @@ export function calculateInvoiceTotals(items: InvoiceItem[]): InvoiceTotals {
   };
 }
 
+/** Formats a numeric amount as a German-locale EUR currency value. */
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('de-DE', {
     style: 'currency',
@@ -73,6 +76,7 @@ export function formatCurrency(value: number): string {
   }).format(value);
 }
 
+/** Converts an ISO date value to the invoice display format DD.MM.YYYY. */
 export function formatDate(value: string): string {
   const [year, month, day] = value.split('-');
   return year && month && day ? `${day}.${month}.${year}` : value;

@@ -5,10 +5,12 @@ import {
   DocumentFormValue,
   formatDate,
   formatCurrency,
+  parseAmount,
 } from '../models/document.model';
 
 @Injectable({ providedIn: 'root' })
 export class PdfGenerationService {
+  /** Maps invoice data into a typed pdfmake document definition. */
   createDocumentDefinition(data: DocumentFormValue): TDocumentDefinitions {
     try {
       return {
@@ -46,7 +48,7 @@ export class PdfGenerationService {
                 ...data.items.map((item, index) => [
                   String(index + 1),
                   item.description || 'Item',
-                  formatCurrency(Number(item.price.replace(',', '.')) || 0),
+                  formatCurrency(this.parseItemPrice(item.price)),
                 ]),
               ],
             },
@@ -86,6 +88,19 @@ export class PdfGenerationService {
     }
   }
 
+  /** Parses and validates an invoice item price for PDF rendering. */
+  private parseItemPrice(value: string): number {
+    const convertedValue =
+      value.trim() === '' ? 0 : Number(value.trim().replace(',', '.'));
+
+    if (!Number.isFinite(convertedValue)) {
+      throw new Error('Invoice item price must be a finite number.');
+    }
+
+    return parseAmount(value);
+  }
+
+  /** Generates a PDF blob and downloads it as an invoice file. */
   async generate(data: DocumentFormValue): Promise<void> {
     try {
       const definition = this.createDocumentDefinition(data);
@@ -106,6 +121,7 @@ export class PdfGenerationService {
     }
   }
 
+  /** Downloads a Blob through a temporary browser link. */
   downloadBlob(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
